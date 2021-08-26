@@ -1,4 +1,4 @@
-package classes;
+package classes.exceptions;
 
 public class UJCException extends Exception{
     public UJCException() {

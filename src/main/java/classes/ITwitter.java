@@ -1,5 +1,10 @@
 package classes;
 
+import classes.exceptions.SIException;
+import classes.exceptions.MFPException;
+import classes.exceptions.PDException;
+import classes.exceptions.PEException;
+import classes.exceptions.PIException;
 import java.util.ArrayList;
 
 public interface ITwitter {

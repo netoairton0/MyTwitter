@@ -1,4 +1,4 @@
-package classes;
+package classes.exceptions;
 
 public class UNCException extends Exception{
     public UNCException() {

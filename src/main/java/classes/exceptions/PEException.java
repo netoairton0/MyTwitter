@@ -1,4 +1,4 @@
-package classes;
+package classes.exceptions;
 
 public class PEException extends Exception{
     public PEException() {

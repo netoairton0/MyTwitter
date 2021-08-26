@@ -1,10 +1,17 @@
-package classes; //NÃO TRATAR AS EXCEPTIONS AQUI, MUDAR ISSO NO PROXIMO COMMIT
+package classes;
 
+import classes.exceptions.UJCException;
+import classes.exceptions.PDException;
+import classes.exceptions.SIException;
+import classes.exceptions.PIException;
+import classes.exceptions.PEException;
+import classes.exceptions.MFPException;
+import classes.exceptions.UNCException;
 import java.util.ArrayList;
 
 public class MyTwitter implements ITwitter{
     
-    private IRepositorioUsuario repositorio;
+    private final IRepositorioUsuario repositorio;
     
     public MyTwitter(IRepositorioUsuario repositorio) {
         this.repositorio = repositorio;
@@ -16,6 +23,7 @@ public class MyTwitter implements ITwitter{
         try {
             if(repositorio.buscar(usuario.getUsuario()) != usuario) {
                 repositorio.cadastrar(usuario);
+                System.out.println("Perfil cadastrado");
             }
             else {
                 throw new UJCException();
@@ -23,24 +31,29 @@ public class MyTwitter implements ITwitter{
         }
         catch(UJCException e) {
             e.printStackTrace();
+            throw new PEException();
         }
+        
     }
 
     @Override
     public void cancelarPerfil(String usuario) throws PIException, PDException{
         Perfil perfilAux = repositorio.buscar(usuario);
         
-        try {
-            if(perfilAux == null) {
-                throw new PIException();
-            }
-            else if(!perfilAux.isAtivo()) {
-                throw new PDException();
-            }
-            perfilAux.setAtivo(false);
+        if(perfilAux == null) {
+            throw new PIException();
         }
-        catch(PIException | PDException e) {
-            e.printStackTrace();
+        else if(!perfilAux.isAtivo()) {
+            throw new PDException();
+        }
+        
+        perfilAux.setAtivo(false);
+        
+        try {
+            repositorio.atualizar(perfilAux);
+            System.out.println("Perfil desativado");
+        } catch (UNCException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -50,42 +63,45 @@ public class MyTwitter implements ITwitter{
         Tweet tweetAux = new Tweet(usuario, mensagem);
         ArrayList<Perfil> seguidoresAux = perfilAux.getSeguidores();
         
-        try{
-            if(perfilAux == null) {
-                throw new PIException();
-            }
-            else if((tweetAux.getMensagem().length() > 140)) {
-                throw new MFPException();
-            }
-            
-            perfilAux.addTweet(tweetAux);
-            
-            for(Perfil p : seguidoresAux) {
-                p.addTweet(tweetAux);
+        if(perfilAux == null) {
+            throw new PIException();
+        }
+        else if((tweetAux.getMensagem().length() > 140)) {
+            throw new MFPException();
+        }
+
+        perfilAux.addTweet(tweetAux);
+        
+        try {
+            repositorio.atualizar(perfilAux);
+        } catch (UNCException ex) {
+            ex.printStackTrace();
+        }
+
+        for(Perfil p : seguidoresAux) {
+            p.addTweet(tweetAux);
+            try {
+                repositorio.atualizar(p);
+            } catch (UNCException ex) {
+                ex.printStackTrace();
             }
         }
-        catch(PIException | MFPException e) {
-            e.printStackTrace();
-        }
+        
+        System.out.println("Tweet publicado!!");
     }
 
     @Override
     public ArrayList<Tweet> timeline(String usuario) throws PIException, PDException{
         Perfil perfilAux = repositorio.buscar(usuario);
         
-        try{
-            if(perfilAux == null) {
-                throw new PIException();
-            }
-            else if(!(perfilAux.isAtivo())) {
-                throw new PDException();
-            }
-            return perfilAux.getTimeline();
+        if(perfilAux == null) {
+            throw new PIException();
         }
-        catch(PIException | PDException e) {
-            e.printStackTrace();
-            return null;
+        else if(!(perfilAux.isAtivo())) {
+            throw new PDException();
         }
+        
+        return perfilAux.getTimeline();
     }
 
     @Override
@@ -94,26 +110,20 @@ public class MyTwitter implements ITwitter{
         ArrayList<Tweet> timelineAux = perfilAux.getTimeline();
         ArrayList<Tweet> tweetsDoUsuario = new ArrayList<>();
         
-        try { 
-            if(perfilAux == null) {
-                throw new PIException();
-            }
-            else if(!perfilAux.isAtivo()) {
-                throw new PDException();
-            }
-            
-            for(Tweet t : timelineAux) { 
-                if(t.getUsuario().equals(perfilAux.getUsuario())) {
-                    tweetsDoUsuario.add(t);
-                }
-            }
-            
-            return tweetsDoUsuario;
+        if(perfilAux == null) {
+            throw new PIException();
         }
-        catch(PIException | PDException e) { 
-            e.printStackTrace();
-            return null;
+        else if(!perfilAux.isAtivo()) {
+            throw new PDException();
         }
+
+        for(Tweet t : timelineAux) { 
+            if(t.getUsuario().equals(perfilAux.getUsuario())) {
+                tweetsDoUsuario.add(t);
+            }
+        }
+
+        return tweetsDoUsuario;
     }
 
     @Override
@@ -121,23 +131,27 @@ public class MyTwitter implements ITwitter{
         Perfil seguidorAux = repositorio.buscar(seguidor);
         Perfil seguidoAux = repositorio.buscar(seguido);
         
-        try { 
-            if(seguidorAux == null || seguidoAux == null) { 
-                throw new PIException();
-            }
-            else if(seguidorAux.isAtivo() == false || seguidoAux.isAtivo() == false) { 
-                throw new PDException();
-            }
-            else if(seguidor.equals(seguido)) { 
-                throw new SIException();
-            }
-            
-            seguidoAux.addSeguidor(seguidorAux);
-            seguidorAux.addSeguido(seguidoAux);
+        if(seguidorAux == null || seguidoAux == null) { 
+            throw new PIException();
         }
-        catch(PIException | PDException | SIException e) { 
-            e.printStackTrace();
+        else if(seguidorAux.isAtivo() == false || seguidoAux.isAtivo() == false) { 
+            throw new PDException();
         }
+        else if(seguidor.equals(seguido)) { 
+            throw new SIException();
+        }
+
+        seguidoAux.addSeguidor(seguidorAux);
+        seguidorAux.addSeguido(seguidoAux);
+        
+        try {
+            repositorio.atualizar(seguidoAux);
+            repositorio.atualizar(seguidorAux);
+        } catch (UNCException ex) {
+            ex.printStackTrace();
+        }
+        
+        System.out.println("Operação realizada com sucesso!!");
     }
 
     @Override
@@ -146,25 +160,20 @@ public class MyTwitter implements ITwitter{
         ArrayList<Perfil> seguidoresAux = perfilAux.getSeguidores();
         int cont = 0;
         
-        try { 
-            if(perfilAux == null) {
-                throw new PIException();
-            }
-            else if(!perfilAux.isAtivo()) {
-                throw new PDException();
-            }
+        if(perfilAux == null) {
+            throw new PIException();
+        }
+        else if(!perfilAux.isAtivo()) {
+            throw new PDException();
+        }
             
-            for(Perfil p : seguidoresAux) { 
-                if(p.isAtivo()) { 
-                    cont++;
-                }
+        for(Perfil p : seguidoresAux) { 
+            if(p.isAtivo()) { 
+                cont++;
             }
-            return cont;
         }
-        catch(PIException | PDException e) { 
-            e.printStackTrace();
-            return 0;
-        }
+        
+        return cont;
     }
 
     @Override
@@ -173,26 +182,20 @@ public class MyTwitter implements ITwitter{
         ArrayList<Perfil> seguidoresAux = perfilAux.getSeguidores();
         ArrayList<Perfil> seguidoresAtivos = new ArrayList<>();
         
-        try { 
-            if(perfilAux == null) {
-                throw new PIException();
-            }
-            else if(!perfilAux.isAtivo()) {
-                throw new PDException();
-            }
-            
-            for(Perfil p : seguidoresAux) { 
-                if(p.isAtivo()) {
-                    seguidoresAtivos.add(p);
-                }
-            }
-            
-            return seguidoresAtivos;
+        if(perfilAux == null) {
+            throw new PIException();
         }
-        catch(PIException | PDException e) { 
-            e.printStackTrace();
-            return null;
+        else if(!perfilAux.isAtivo()) {
+            throw new PDException();
         }
+            
+        for(Perfil p : seguidoresAux) { 
+            if(p.isAtivo()) {
+                seguidoresAtivos.add(p);
+            }
+        }
+            
+        return seguidoresAtivos;
     }
 
     @Override
@@ -201,26 +204,20 @@ public class MyTwitter implements ITwitter{
         ArrayList<Perfil> seguidosAux = perfilAux.getSeguidos();
         ArrayList<Perfil> seguidosAtivos = new ArrayList<>();
         
-        try { 
-            if(perfilAux == null) {
-                throw new PIException();
-            }
-            else if(!perfilAux.isAtivo()) {
-                throw new PDException();
-            }
-            
-            for(Perfil p : seguidosAux) { 
-                if(p.isAtivo()) {
-                    seguidosAtivos.add(p);
-                }
-            }
-            
-            return seguidosAtivos;
+        if(perfilAux == null) {
+            throw new PIException();
         }
-        catch(PIException | PDException e) { 
-            e.printStackTrace();
-            return null;
+        else if(!perfilAux.isAtivo()) {
+            throw new PDException();
         }
+            
+        for(Perfil p : seguidosAux) { 
+            if(p.isAtivo()) {
+                seguidosAtivos.add(p);
+            }
+        }
+            
+        return seguidosAtivos;
     }
     
 }

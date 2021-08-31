@@ -1,7 +1,8 @@
-package classes;
+package repositorios;
 
-import classes.exceptions.UJCException;
-import classes.exceptions.UNCException;
+import usuarios.Perfil;
+import exceptions.UJCException;
+import exceptions.UNCException;
 
 public interface IRepositorioUsuario {
     public void cadastrar(Perfil usuario) throws UJCException;

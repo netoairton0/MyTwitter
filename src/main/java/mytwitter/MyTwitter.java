@@ -1,13 +1,16 @@
-package classes;
+package mytwitter;
 
-import classes.exceptions.UJCException;
-import classes.exceptions.PDException;
-import classes.exceptions.SIException;
-import classes.exceptions.PIException;
-import classes.exceptions.PEException;
-import classes.exceptions.MFPException;
-import classes.exceptions.UNCException;
+import usuarios.Perfil;
+import exceptions.UJCException;
+import exceptions.PDException;
+import exceptions.SIException;
+import exceptions.PIException;
+import exceptions.PEException;
+import exceptions.MFPException;
+import exceptions.UNCException;
 import java.util.ArrayList;
+import repositorios.IRepositorioUsuario;
+import tweet.Tweet;
 
 public class MyTwitter implements ITwitter{
     
@@ -61,12 +64,11 @@ public class MyTwitter implements ITwitter{
     public void tweetar(String usuario, String mensagem) throws PIException, MFPException{
         Perfil perfilAux = repositorio.buscar(usuario);
         Tweet tweetAux = new Tweet(usuario, mensagem);
-        ArrayList<Perfil> seguidoresAux = perfilAux.getSeguidores();
         
         if(perfilAux == null) {
             throw new PIException();
         }
-        else if((tweetAux.getMensagem().length() > 140)) {
+        else if((tweetAux.getMensagem().length() > 140) || (tweetAux.getMensagem().length() < 1)) {
             throw new MFPException();
         }
 
@@ -77,7 +79,9 @@ public class MyTwitter implements ITwitter{
         } catch (UNCException ex) {
             ex.printStackTrace();
         }
-
+        
+        ArrayList<Perfil> seguidoresAux = perfilAux.getSeguidores();
+        
         for(Perfil p : seguidoresAux) {
             p.addTweet(tweetAux);
             try {
@@ -91,7 +95,7 @@ public class MyTwitter implements ITwitter{
     }
 
     @Override
-    public ArrayList<Tweet> timeline(String usuario) throws PIException, PDException{
+    public ArrayList<Tweet> timeline(String usuario) throws PIException, PDException{ //retorna so o endereco
         Perfil perfilAux = repositorio.buscar(usuario);
         
         if(perfilAux == null) {
@@ -101,13 +105,13 @@ public class MyTwitter implements ITwitter{
             throw new PDException();
         }
         
+        System.out.println("Timeline:\n");
         return perfilAux.getTimeline();
     }
 
     @Override
     public ArrayList<Tweet> tweets(String usuario) throws PIException, PDException{
         Perfil perfilAux = repositorio.buscar(usuario);
-        ArrayList<Tweet> timelineAux = perfilAux.getTimeline();
         ArrayList<Tweet> tweetsDoUsuario = new ArrayList<>();
         
         if(perfilAux == null) {
@@ -116,13 +120,16 @@ public class MyTwitter implements ITwitter{
         else if(!perfilAux.isAtivo()) {
             throw new PDException();
         }
+        
+        ArrayList<Tweet> timelineAux = perfilAux.getTimeline();
 
         for(Tweet t : timelineAux) { 
             if(t.getUsuario().equals(perfilAux.getUsuario())) {
                 tweetsDoUsuario.add(t);
             }
         }
-
+        
+        System.out.println("Tweets:\n");
         return tweetsDoUsuario;
     }
 
@@ -147,17 +154,15 @@ public class MyTwitter implements ITwitter{
         try {
             repositorio.atualizar(seguidoAux);
             repositorio.atualizar(seguidorAux);
+            System.out.println("Operação realizada com sucesso!!");
         } catch (UNCException ex) {
             ex.printStackTrace();
         }
-        
-        System.out.println("Operação realizada com sucesso!!");
     }
 
     @Override
     public int numeroSeguidores(String usuario) throws PIException, PDException{
         Perfil perfilAux = repositorio.buscar(usuario);
-        ArrayList<Perfil> seguidoresAux = perfilAux.getSeguidores();
         int cont = 0;
         
         if(perfilAux == null) {
@@ -166,6 +171,8 @@ public class MyTwitter implements ITwitter{
         else if(!perfilAux.isAtivo()) {
             throw new PDException();
         }
+        
+        ArrayList<Perfil> seguidoresAux = perfilAux.getSeguidores();
             
         for(Perfil p : seguidoresAux) { 
             if(p.isAtivo()) { 
@@ -173,13 +180,13 @@ public class MyTwitter implements ITwitter{
             }
         }
         
+        System.out.println("Numero de seguidores: ");
         return cont;
     }
 
     @Override
     public ArrayList<Perfil> seguidores(String usuario) throws PIException, PDException{
-        Perfil perfilAux = repositorio.buscar(usuario);
-        ArrayList<Perfil> seguidoresAux = perfilAux.getSeguidores();
+        Perfil perfilAux = repositorio.buscar(usuario); 
         ArrayList<Perfil> seguidoresAtivos = new ArrayList<>();
         
         if(perfilAux == null) {
@@ -188,20 +195,22 @@ public class MyTwitter implements ITwitter{
         else if(!perfilAux.isAtivo()) {
             throw new PDException();
         }
+        
+        ArrayList<Perfil> seguidoresAux = perfilAux.getSeguidores();
             
         for(Perfil p : seguidoresAux) { 
             if(p.isAtivo()) {
                 seguidoresAtivos.add(p);
             }
         }
-            
+        
+        System.out.println("seguidores:\n");
         return seguidoresAtivos;
     }
 
     @Override
     public ArrayList<Perfil> seguidos(String usuario) throws PIException, PDException{
         Perfil perfilAux = repositorio.buscar(usuario);
-        ArrayList<Perfil> seguidosAux = perfilAux.getSeguidos();
         ArrayList<Perfil> seguidosAtivos = new ArrayList<>();
         
         if(perfilAux == null) {
@@ -210,13 +219,16 @@ public class MyTwitter implements ITwitter{
         else if(!perfilAux.isAtivo()) {
             throw new PDException();
         }
-            
+        
+        ArrayList<Perfil> seguidosAux = perfilAux.getSeguidos();
+        
         for(Perfil p : seguidosAux) { 
             if(p.isAtivo()) {
                 seguidosAtivos.add(p);
             }
         }
-            
+        
+        System.out.println("seguidos:\n");
         return seguidosAtivos;
     }
     

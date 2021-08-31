@@ -1,4 +1,4 @@
-package classes.exceptions;
+package exceptions;
 
 public class MFPException extends Exception{
     public MFPException() {

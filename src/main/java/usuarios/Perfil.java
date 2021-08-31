@@ -1,6 +1,7 @@
-package classes;
+package usuarios;
 
 import java.util.ArrayList;
+import tweet.Tweet;
 
 public abstract class Perfil {
     private String usuario;
@@ -12,7 +13,7 @@ public abstract class Perfil {
     public Perfil(String usuario) {
         this.usuario = usuario;
         this.ativo = true;
-        seguidos = new ArrayList<>(); //devo inicializar com o tamanho base ja? ta certo?
+        seguidos = new ArrayList<>();
         seguidores = new ArrayList<>();
         timeline = new ArrayList<>();
     }
@@ -46,7 +47,7 @@ public abstract class Perfil {
     }
     
     public void addTweet(Tweet tweet) {
-        timeline.add(tweet); //certo?
+        timeline.add(tweet); 
     }
     
     public void addSeguidor(Perfil usuario) {
@@ -55,5 +56,10 @@ public abstract class Perfil {
     
     public void addSeguido(Perfil usuario) {
         seguidos.add(usuario);
+    }
+
+    @Override
+    public String toString() {
+        return "Perfil{" + "usuario=" + usuario + ", ativo=" + ativo + "}";
     }
 }

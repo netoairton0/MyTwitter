@@ -1,11 +1,13 @@
-package classes;
+package mytwitter;
 
-import classes.exceptions.SIException;
-import classes.exceptions.MFPException;
-import classes.exceptions.PDException;
-import classes.exceptions.PEException;
-import classes.exceptions.PIException;
+import usuarios.Perfil;
+import exceptions.SIException;
+import exceptions.MFPException;
+import exceptions.PDException;
+import exceptions.PEException;
+import exceptions.PIException;
 import java.util.ArrayList;
+import tweet.Tweet;
 
 public interface ITwitter {
     public void criarPerfil(Perfil usuario) throws PEException;

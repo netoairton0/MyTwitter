@@ -1,4 +1,4 @@
-package classes;
+package tweet;
 
 public class Tweet {
     private String usuario;
@@ -24,4 +24,10 @@ public class Tweet {
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
     }
+
+    @Override
+    public String toString() {
+        return "Tweet{" + "usuario=" + usuario + ", mensagem=" + mensagem + '}';
+    }
+    
 }

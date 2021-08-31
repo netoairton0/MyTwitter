@@ -1,4 +1,4 @@
-package classes;
+package usuarios;
 
 public class PessoaFisica extends Perfil {
     private long cpf;

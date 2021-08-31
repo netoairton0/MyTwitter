@@ -1,4 +1,4 @@
-package classes;
+package usuarios;
 
 public class PessoaJuridica extends Perfil {
     private long cnpj;

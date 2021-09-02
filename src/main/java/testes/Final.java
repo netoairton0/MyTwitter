@@ -25,65 +25,59 @@ public class Final {
         PessoaJuridica pj1 = new PessoaJuridica("Uber", 12345);
         PessoaJuridica pj2 = new PessoaJuridica("Ifood", 54321);
         PessoaJuridica pj3 = new PessoaJuridica("McDonalds", 67890);
-        PessoaJuridica pj4 = new PessoaJuridica("BurgerKing", 98760);
-        PessoaJuridica pj5 = new PessoaJuridica("Whatsapp", 11111);
         
         try { //cadastro de todos os usuarios
             twitter.criarPerfil(pf1);
+            System.out.println("Perfil cadastrado!!!");
         } catch(PEException pe) { 
             pe.printStackTrace();
         }
         
         try {
             twitter.criarPerfil(pf2);
+            System.out.println("Perfil cadastrado!!!");
         } catch(PEException pe) { 
             pe.printStackTrace();
         }
         
         try {
             twitter.criarPerfil(pf3);
+            System.out.println("Perfil cadastrado!!!");
         } catch(PEException pe) { 
             pe.printStackTrace();
         }
         
         try {
             twitter.criarPerfil(pf4);
+            System.out.println("Perfil cadastrado!!!");
         } catch(PEException pe) { 
             pe.printStackTrace();
         }
         
         try {
             twitter.criarPerfil(pf5);
+            System.out.println("Perfil cadastrado!!!");
         } catch(PEException pe) { 
             pe.printStackTrace();
         }
         
         try {
             twitter.criarPerfil(pj1);
+            System.out.println("Perfil cadastrado!!!");
         } catch(PEException pe) { 
             pe.printStackTrace();
         }
         
         try {
             twitter.criarPerfil(pj2);
+            System.out.println("Perfil cadastrado!!!");
         } catch(PEException pe) { 
             pe.printStackTrace();
         }
         
         try {
             twitter.criarPerfil(pj3);
-        } catch(PEException pe) { 
-            pe.printStackTrace();
-        }
-        
-        try {
-            twitter.criarPerfil(pj4);
-        } catch(PEException pe) { 
-            pe.printStackTrace();
-        }
-        
-        try {
-            twitter.criarPerfil(pj5);
+            System.out.println("Perfil cadastrado!!!");
         } catch(PEException pe) { 
             pe.printStackTrace();
         }
@@ -94,14 +88,15 @@ public class Final {
             pe.printStackTrace();
         }
         
-        try { //Perfil Inexistente
-            twitter.cancelarPerfil("JuliaAlmeida");
+        try { //cancelar cadastro
+            twitter.cancelarPerfil("PedroHenrique");
+            System.out.println("Perfil desativado!!!");
         } catch(PDException | PIException e) { 
             e.printStackTrace();
         }
         
-        try { 
-            twitter.cancelarPerfil("PedroHenrique");
+        try { //Perfil Inexistente
+            twitter.cancelarPerfil("JuliaAlmeida");
         } catch(PDException | PIException e) { 
             e.printStackTrace();
         }
@@ -112,7 +107,7 @@ public class Final {
             e.printStackTrace();
         }
         
-        try { 
+        try { //tweetar
             twitter.tweetar("JoseAirton", "Oi, esse eh meu primeiro tweet");
         } catch(PIException | MFPException e) { 
             e.printStackTrace();
@@ -137,15 +132,16 @@ public class Final {
         }
         
         try {//Perfil inexistente 
-            twitter.tweetar("JuliaAlmeida", "oi");
+            twitter.tweetar("Julia", "oi");
         } catch(PIException | MFPException e) { 
             e.printStackTrace();
         }
         
         ArrayList<Tweet> arrayTweetsAux; 
         
-        try { 
+        try { //tweets
             arrayTweetsAux = twitter.tweets("JoseAirton");
+            System.out.println("Tweets:");
             for(int i = 0; i<arrayTweetsAux.size(); i++) { 
                 System.out.println("\n" + arrayTweetsAux.get(i));
             }
@@ -154,7 +150,7 @@ public class Final {
         }
         
         try { //Perfil Inexistente
-            arrayTweetsAux = twitter.tweets("JuliaAlmeida");
+            arrayTweetsAux = twitter.tweets("Julia");
             for(int i = 0; i<arrayTweetsAux.size(); i++) { 
                 System.out.println("\n" + arrayTweetsAux.get(i));
             }
@@ -171,7 +167,7 @@ public class Final {
             e.printStackTrace();
         }
         
-        try { 
+        try { //seguir
             twitter.seguir("JoaoVictor", "JoseAirton");
         } catch(PIException | SIException | PDException e) { 
             e.printStackTrace();
@@ -201,9 +197,20 @@ public class Final {
             e.printStackTrace();
         }
         
-        try { 
-            arrayTweetsAux = twitter.timeline("JoseAirton");
+        try { //timeline
+            arrayTweetsAux = twitter.timeline("JoaoVictor");
+            System.out.println("Timeline:");
             for(int i = 0; i<arrayTweetsAux.size(); i++) {
+                System.out.println("\n" + arrayTweetsAux.get(i));
+            }
+        } catch(PIException | PDException e) { 
+            e.printStackTrace();
+        }
+        
+        try { 
+            arrayTweetsAux = twitter.tweets("JoaoVictor");
+            System.out.println("Tweets:");
+            for(int i = 0; i<arrayTweetsAux.size(); i++) { 
                 System.out.println("\n" + arrayTweetsAux.get(i));
             }
         } catch(PIException | PDException e) { 
@@ -253,8 +260,31 @@ public class Final {
         }
         
         try { 
+            twitter.tweetar("Uber", "Baixe o nosso aplicativo!!");
+        } catch(PIException | MFPException e) { 
+            e.printStackTrace();
+        }
+        
+        try {
+            arrayTweetsAux = twitter.timeline("AnaLeticia");
+            System.out.println("Timeline:");
+            for(int i = 0; i<arrayTweetsAux.size(); i++) {
+                System.out.println("\n" + arrayTweetsAux.get(i));
+            }
+        } catch(PIException | PDException e) { 
+            e.printStackTrace();
+        }
+        
+        try { //numero de seguidores
             int aux = twitter.numeroSeguidores("Uber");
-            System.out.println(aux);
+            System.out.println("Numero de seguidores: " + aux);
+        } catch(PIException | PDException e) { 
+            e.printStackTrace();
+        }
+        
+        try { 
+            int aux = twitter.numeroSeguidores("Ifood");
+            System.out.println("Numero de seguidores: " + aux);
         } catch(PIException | PDException e) { 
             e.printStackTrace();
         }
@@ -275,8 +305,19 @@ public class Final {
         
         ArrayList<Perfil> arrayPerfilAux;
         
-        try { 
+        try { //seguidores
             arrayPerfilAux = twitter.seguidores("Uber");
+            System.out.println("Seguidores:");
+            for(int i = 0; i < arrayPerfilAux.size(); i++) {
+                System.out.println("\n"+arrayPerfilAux.get(i));
+            }
+        } catch(PIException | PDException e) { 
+            e.printStackTrace();
+        }
+        
+        try { 
+            arrayPerfilAux = twitter.seguidores("Ifood");
+            System.out.println("Seguidores:");
             for(int i = 0; i < arrayPerfilAux.size(); i++) {
                 System.out.println("\n"+arrayPerfilAux.get(i));
             }
@@ -302,8 +343,19 @@ public class Final {
             e.printStackTrace();
         }
         
-        try { 
+        try { //seguidos
             arrayPerfilAux = twitter.seguidos(("JoaoVictor"));
+            System.out.println("Seguidos:");
+            for(int i = 0; i < arrayPerfilAux.size(); i++) { 
+                System.out.println("\n"+arrayPerfilAux.get(i));
+            }
+        } catch(PIException | PDException e) { 
+            e.printStackTrace();
+        }
+        
+        try { 
+            arrayPerfilAux = twitter.seguidos(("Ifood"));
+            System.out.println("Seguidos:");
             for(int i = 0; i < arrayPerfilAux.size(); i++) { 
                 System.out.println("\n"+arrayPerfilAux.get(i));
             }

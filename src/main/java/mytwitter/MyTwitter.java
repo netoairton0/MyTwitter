@@ -26,7 +26,6 @@ public class MyTwitter implements ITwitter{
         try {
             if(repositorio.buscar(usuario.getUsuario()) != usuario) {
                 repositorio.cadastrar(usuario);
-                System.out.println("Perfil cadastrado");
             }
             else {
                 throw new UJCException();
@@ -54,7 +53,6 @@ public class MyTwitter implements ITwitter{
         
         try {
             repositorio.atualizar(perfilAux);
-            System.out.println("Perfil desativado");
         } catch (UNCException ex) {
             ex.printStackTrace();
         }
@@ -91,7 +89,6 @@ public class MyTwitter implements ITwitter{
             }
         }
         
-        System.out.println("Tweet publicado!!");
     }
 
     @Override
@@ -105,7 +102,6 @@ public class MyTwitter implements ITwitter{
             throw new PDException();
         }
         
-        System.out.println("Timeline:\n");
         return perfilAux.getTimeline();
     }
 
@@ -129,7 +125,6 @@ public class MyTwitter implements ITwitter{
             }
         }
         
-        System.out.println("Tweets:\n");
         return tweetsDoUsuario;
     }
 
@@ -151,12 +146,27 @@ public class MyTwitter implements ITwitter{
         seguidoAux.addSeguidor(seguidorAux);
         seguidorAux.addSeguido(seguidoAux);
         
+        atualizarTimelineSeguidor(seguidorAux, seguidoAux);
+        
         try {
             repositorio.atualizar(seguidoAux);
             repositorio.atualizar(seguidorAux);
-            System.out.println("Operação realizada com sucesso!!");
         } catch (UNCException ex) {
             ex.printStackTrace();
+        }
+    }
+    
+    private void atualizarTimelineSeguidor(Perfil seguidor, Perfil seguido) { 
+        ArrayList<Tweet> tweetsDoSeguido = null;
+        
+        try {
+            tweetsDoSeguido = tweets(seguido.getUsuario());
+        } catch (PIException | PDException ex) {
+            ex.printStackTrace();
+        }
+        
+        for(Tweet t : tweetsDoSeguido) { 
+            seguidor.addTweet(t);
         }
     }
 
@@ -180,7 +190,6 @@ public class MyTwitter implements ITwitter{
             }
         }
         
-        System.out.println("Numero de seguidores: ");
         return cont;
     }
 
@@ -204,7 +213,6 @@ public class MyTwitter implements ITwitter{
             }
         }
         
-        System.out.println("seguidores:\n");
         return seguidoresAtivos;
     }
 
@@ -228,7 +236,6 @@ public class MyTwitter implements ITwitter{
             }
         }
         
-        System.out.println("seguidos:\n");
         return seguidosAtivos;
     }
     
